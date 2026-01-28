@@ -210,6 +210,19 @@ extension MilkdownEditor {
           #endif
         }
 
+      case "fetchLinkPreview":
+        if let requestId = body["requestId"] as? String,
+          let urlString = body["url"] as? String
+        {
+          Task { @MainActor in
+            let response = await LinkPreviewService.shared.fetchPreviewForBridge(
+              urlString: urlString,
+              requestId: requestId
+            )
+            self.sendLinkPreviewResponse(response)
+          }
+        }
+
       default:
         break
       }
@@ -268,6 +281,37 @@ extension MilkdownEditor {
         if let error = error {
           Logger.milkdown.error("Failed to set theme: \(error.localizedDescription)")
           self?.parent.onError?(.themeUpdateFailed(underlying: error))
+        }
+      }
+    }
+
+    // MARK: - Link Preview
+
+    func sendLinkPreviewResponse(_ response: LinkPreviewResponse) {
+      guard isEditorReady, let webView = webView else {
+        return
+      }
+
+      guard let jsonData = try? JSONEncoder().encode(response),
+        let jsonString = String(data: jsonData, encoding: .utf8)
+      else {
+        Logger.milkdown.error("Failed to encode link preview response")
+        return
+      }
+
+      let script = """
+        try {
+          const response = \(jsonString);
+          window.editorBridge?.receiveLinkPreview(response);
+        } catch (e) {
+          console.error('Error sending link preview response:', e);
+        }
+        """
+
+      webView.evaluateJavaScript(script) { _, error in
+        if let error = error {
+          Logger.milkdown.error(
+            "Failed to send link preview response: \(error.localizedDescription)")
         }
       }
     }

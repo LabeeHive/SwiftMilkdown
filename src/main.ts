@@ -7,15 +7,19 @@ import { clipboard } from '@milkdown/kit/plugin/clipboard'
 import { trailing } from '@milkdown/kit/plugin/trailing'
 import { listItemBlockComponent, listItemBlockConfig } from '@milkdown/kit/component/list-item-block'
 import { emoji } from '@milkdown/plugin-emoji'
-import { prism, prismConfig } from '@milkdown/plugin-prism'
+import { prism } from '@milkdown/plugin-prism'
 import { nord } from '@milkdown/theme-nord'
 import { setupBridge } from './bridge'
+import { linkCardNode, linkCardPlugin } from './linkPreview'
 
 // Import Nord theme styles
 import '@milkdown/theme-nord/style.css'
 
 // Import Prism theme for syntax highlighting
 import 'prism-themes/themes/prism-nord.css'
+
+// Import link card styles
+import './linkPreview/linkCard.css'
 
 // Default content is empty - content will be set from Swift via bridge.setContent()
 const defaultMarkdown = ''
@@ -27,7 +31,7 @@ async function createEditor() {
       ctx.set(defaultValueCtx, defaultMarkdown)
 
       // Listen to markdown changes
-      ctx.get(listenerCtx).markdownUpdated((ctx, markdown) => {
+      ctx.get(listenerCtx).markdownUpdated((_ctx, markdown) => {
         // Send changes to Swift
         setupBridge().sendContent(markdown)
       })
@@ -58,6 +62,8 @@ async function createEditor() {
     .use(trailing)
     .use(listener)
     .use(history)
+    .use(linkCardNode)
+    .use(linkCardPlugin)
     .use(clipboard)
     .create()
 
@@ -69,6 +75,7 @@ createEditor().then((editor) => {
   // Setup Swift bridge
   const bridge = setupBridge()
   bridge.setEditor(editor)
+  bridge.enableLinkPreview()
 
   // Detect initial theme from system preference
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -87,6 +94,18 @@ createEditor().then((editor) => {
   if (editorContainer) {
     editorContainer.addEventListener('click', (e) => {
       const target = e.target as HTMLElement
+
+      // Handle link card clicks - always open in browser
+      const linkCard = target.closest('.link-card') as HTMLElement
+      if (linkCard) {
+        e.preventDefault()
+        e.stopPropagation()
+        const url = linkCard.getAttribute('data-url') || linkCard.getAttribute('href')
+        if (url) {
+          bridge.openURL(url)
+        }
+        return
+      }
 
       // Handle link clicks with Cmd modifier (macOS standard)
       if (target.tagName === 'A' && e.metaKey) {

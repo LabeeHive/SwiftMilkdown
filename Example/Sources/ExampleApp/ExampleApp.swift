@@ -75,5 +75,15 @@ private let demoMarkdown = """
 
   ---
 
+  ## Link Preview
+
+  Try pasting a URL to see the link card preview feature!
+
+  Example URLs to test:
+  - https://labee.jp
+  - https://github.com/nicholasareed/prosemirror-link-preview
+
+  ---
+
   Edit this content to test the editor!
   """

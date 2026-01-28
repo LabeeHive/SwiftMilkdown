@@ -1,15 +1,25 @@
-import type { Editor } from '@milkdown/core'
+import type { Editor } from '@milkdown/kit/core'
 import { editorViewCtx, parserCtx } from '@milkdown/kit/core'
 import { Slice } from '@milkdown/prose/model'
+import type { LinkPreviewResponse } from './linkPreview/types'
+import { handleLinkPreviewResponse, scanAndInsertCards } from './linkPreview/linkCardPlugin'
 
 /**
  * Bridge for communication between JavaScript and Swift
  */
 class SwiftBridge {
   private editor: Editor | null = null
+  private linkPreviewEnabled: boolean = false
 
   setEditor(editor: Editor) {
     this.editor = editor
+  }
+
+  /**
+   * Enable link preview feature
+   */
+  enableLinkPreview() {
+    this.linkPreviewEnabled = true
   }
 
   /**
@@ -62,6 +72,16 @@ class SwiftBridge {
         )
         view.dispatch(tr)
       })
+
+      // Scan for standalone URLs and insert preview cards
+      if (this.linkPreviewEnabled) {
+        // Use setTimeout to let the document settle first
+        setTimeout(() => {
+          this.editor?.action((ctx) => {
+            scanAndInsertCards(ctx)
+          })
+        }, 100)
+      }
     } catch (error) {
       console.error('Error setting content:', error)
     }
@@ -96,6 +116,24 @@ class SwiftBridge {
         type: 'openURL',
         url: url
       })
+    }
+  }
+
+  /**
+   * Receive link preview data from Swift
+   * Called from Swift side when preview data is fetched
+   */
+  receiveLinkPreview(response: LinkPreviewResponse) {
+    if (!this.editor || !this.linkPreviewEnabled) {
+      return
+    }
+
+    try {
+      this.editor.action((ctx) => {
+        handleLinkPreviewResponse(ctx, response)
+      })
+    } catch (error) {
+      console.error('Error handling link preview response:', error)
     }
   }
 }
