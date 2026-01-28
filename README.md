@@ -6,6 +6,7 @@ A WYSIWYG Markdown editor for Swift/SwiftUI, powered by [Milkdown](https://milkd
 
 - WYSIWYG Markdown editing (Typora-style)
 - CommonMark + GFM support
+- Link preview cards for pasted URLs (using LPMetadataProvider)
 - Emoji support (`:smile:`, `:rocket:`, etc.)
 - Syntax highlighting for code blocks
 - Dark/Light theme auto-detection
@@ -20,7 +21,7 @@ Add the following to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/LabeeHive/SwiftMilkdown", from: "1.1.0")
+    .package(url: "https://github.com/LabeeHive/SwiftMilkdown", from: "1.2.0")
 ]
 ```
 
@@ -146,9 +147,11 @@ SwiftMilkdown/
 ├── package.json               # npm dependencies
 ├── src/                       # TypeScript source
 │   ├── main.ts               # Milkdown editor setup
-│   └── bridge.ts             # Swift ↔ JS communication
+│   ├── bridge.ts             # Swift ↔ JS communication
+│   └── linkPreview/          # Link preview plugin
 ├── Sources/SwiftMilkdown/
 │   ├── MilkdownEditor.swift  # SwiftUI component
+│   ├── LinkPreview/          # Link preview service & cache
 │   └── Resources/Editor/     # Built web assets (generated)
 ├── Tests/SwiftMilkdownTests/ # Swift tests
 ├── Example/                   # Example macOS app
