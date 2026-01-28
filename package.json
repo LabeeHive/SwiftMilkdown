@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "clean": "rm -rf Sources/SwiftMilkdown/Resources/Editor node_modules .build",
-    "typecheck": "tsc --noEmit"
+    "clean": "rm -rf Sources/SwiftMilkdown/Resources/Editor node_modules .build Example/.build",
+    "typecheck": "tsc --noEmit",
+    "example:build": "pnpm run build && cd Example && swift build",
+    "preexample": "pnpm run example:build",
+    "example": "./Example/.build/debug/ExampleApp"
   },
   "keywords": [
     "markdown",
@@ -32,6 +35,7 @@
     "prism-themes": "^1.9.0"
   },
   "devDependencies": {
+    "prettier": "^3.8.1",
     "typescript": "5.9.3",
     "vite": "7.3.1"
   }
