@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vigilare Editor</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+
+    #editor {
+      width: 100%;
+      height: 100%;
+      padding: var(--spacing-lg);
+      overflow-y: auto;
+    }
+
+    /* Apply theme colors to editor */
+    .milkdown-theme-nord {
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+
+    /* Make editor clickable even with little content */
+    .milkdown-theme-nord,
+    .milkdown-theme-nord .ProseMirror {
+      min-height: 100%;
+    }
+
+    /* ==========================================================================
+       Code Blocks - Modern, clean styling with design tokens
+       ========================================================================== */
+
+    /* ==========================================================================
+       Code Color Override - Must come AFTER typography section
+       Higher specificity to override Nord theme's code colors
+       ========================================================================== */
+
+    /* Inline code - Notion style: red text with higher specificity */
+    .milkdown-theme-nord.milkdown-theme-nord code {
+      background-color: var(--color-bg-code-inline);
+      color: var(--color-code-text);
+      padding: var(--spacing-xs) calc(var(--spacing-sm) - var(--spacing-xs));
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-caption);
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      font-weight: var(--font-weight-normal);
+    }
+
+    /* Pre block (multi-line code) - Modern, spacious design */
+    .milkdown-theme-nord pre {
+      background-color: var(--color-bg-code);
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin: var(--spacing-md) 0;
+      overflow-x: auto;
+      line-height: var(--line-height-relaxed);
+    }
+
+    /* Code inside pre - Notion style: red text with HIGHEST specificity */
+    /* Must override Nord theme's "color: inherit" */
+    .milkdown-theme-nord.milkdown-theme-nord pre code {
+      background-color: transparent;
+      color: var(--color-code-text);
+      padding: 0;
+      border-radius: 0;
+      font-size: var(--font-size-caption);
+    }
+
+    /* ==========================================================================
+       Emoji - Inline icons sized to match text
+       ========================================================================== */
+
+    /* Override Nord theme's "img { width: 100%; }" for emoji images */
+    .milkdown-theme-nord span[data-type="emoji"] img {
+      width: 1.2em;
+      height: 1.2em;
+      vertical-align: middle;
+      display: inline-block;
+      margin: 0 0.05em;
+    }
+
+    /* ==========================================================================
+       Links - macOS system blue with smooth transitions
+       ========================================================================== */
+
+    .milkdown-theme-nord a {
+      color: var(--color-accent);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+      border-bottom: 1px solid transparent;
+    }
+
+    .milkdown-theme-nord a:hover {
+      color: var(--color-accent-hover);
+      border-bottom-color: var(--color-accent-hover);
+    }
+
+    /* ==========================================================================
+       Scrollbar - macOS native style with smooth appearance
+       ========================================================================== */
+
+    #editor::-webkit-scrollbar {
+      background-color: transparent;
+      width: var(--spacing-md);
+    }
+
+    #editor::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    #editor::-webkit-scrollbar-button {
+      display: none;
+    }
+
+    #editor::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      border-radius: calc(var(--spacing-md) / 2);
+      border: var(--spacing-xs) solid transparent;
+      background-clip: content-box;
+      transition: background-color var(--transition-base);
+    }
+
+    #editor:hover::-webkit-scrollbar-thumb {
+      background-color: var(--color-scrollbar);
+    }
+
+    #editor::-webkit-scrollbar-thumb:hover {
+      background-color: var(--color-scrollbar-hover);
+    }
+
+    /* ==========================================================================
+       Design Tokens
+       Complete design system with spacing, colors, typography, and effects
+       ========================================================================== */
+
+    :root {
+      /* ==================== Spacing ==================== */
+      /* Base: 4px scale for consistent rhythm */
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 12px;
+      --spacing-lg: 16px;
+      --spacing-xl: 20px;
+      --spacing-xxl: 24px;
+
+      /* ==================== Border Radius ==================== */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+
+      /* ==================== Typography ==================== */
+      /* WCAG 2.1 Level AA compliant font sizes */
+      --font-size-xs: 11px;      /* Minimum size for badges, timestamps */
+      --font-size-sm: 13px;      /* Captions, meta information */
+      --font-size-base: 15px;    /* Body text (increased for accessibility) */
+      --font-size-lg: 18px;      /* Small headings */
+      --font-size-xl: 20px;      /* Medium headings */
+      --font-size-xxl: 24px;     /* Large headings */
+
+      /* Semantic Aliases - Typography */
+      --font-size-caption: var(--font-size-sm);
+      --font-size-body: var(--font-size-base);
+      --font-size-heading3: var(--font-size-lg);
+      --font-size-heading2: var(--font-size-xl);
+      --font-size-heading1: var(--font-size-xxl);
+
+      /* Line Heights */
+      --line-height-tight: 1.25;
+      --line-height-normal: 1.5;
+      --line-height-relaxed: 1.625;
+
+      /* Font Weights */
+      --font-weight-normal: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+
+      /* ==================== Transitions ==================== */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* ==================== Shadows ==================== */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 4px 8px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    /* ==================== Theme Colors ==================== */
+    body[data-theme="light"] {
+      /* Background Colors */
+      --color-bg-primary: #f5f5f7;
+      --color-bg-secondary: #fafafc;
+      --color-bg-tertiary: #e5e5ea;
+      --color-bg-code: #f5f5f7;
+      --color-bg-code-inline: #e5e5ea;
+
+      /* Text Colors */
+      --color-text-primary: #1d1d1f;
+      --color-text-secondary: #86868b;
+      --color-text-tertiary: #636366;
+
+      /* Border Colors */
+      --color-border-primary: #d1d1d6;
+      --color-border-secondary: #e5e5ea;
+
+      /* Accent Colors */
+      --color-accent: #007AFF;
+      --color-accent-hover: #0051D5;
+      --color-success: #34C759;
+      --color-warning: #FF9500;
+      --color-error: #FF3B30;
+
+      /* List Marker Colors */
+      --color-marker-bullet: #86868b;
+      --color-marker-ordered: #86868b;
+      --color-marker-checked: #34C759;
+      --color-marker-unchecked: #86868b;
+
+      /* Scrollbar */
+      --color-scrollbar: rgba(0, 0, 0, 0.2);
+      --color-scrollbar-hover: rgba(0, 0, 0, 0.35);
+
+      /* Code Syntax - Notion style: unified red for all code */
+      --color-code-text: #eb5757;
+    }
+
+    body[data-theme="dark"] {
+      /* Background Colors */
+      --color-bg-primary: #1c1c1e;
+      --color-bg-secondary: #2c2c2e;
+      --color-bg-tertiary: #3a3a3c;
+      --color-bg-code: #1c1c1e;
+      --color-bg-code-inline: #3a3a3c;
+
+      /* Text Colors */
+      --color-text-primary: #f5f5f7;
+      --color-text-secondary: #98989d;
+      --color-text-tertiary: #aeaeb2;
+
+      /* Border Colors */
+      --color-border-primary: #48484a;
+      --color-border-secondary: #3a3a3c;
+
+      /* Accent Colors */
+      --color-accent: #0A84FF;
+      --color-accent-hover: #409CFF;
+      --color-success: #30D158;
+      --color-warning: #FF9F0A;
+      --color-error: #FF453A;
+
+      /* List Marker Colors */
+      --color-marker-bullet: #98989d;
+      --color-marker-ordered: #98989d;
+      --color-marker-checked: #30D158;
+      --color-marker-unchecked: #98989d;
+
+      /* Scrollbar */
+      --color-scrollbar: rgba(255, 255, 255, 0.2);
+      --color-scrollbar-hover: rgba(255, 255, 255, 0.35);
+
+      /* Code Syntax - Notion style: unified red for all code */
+      --color-code-text: #ff6b6b;
+    }
+
+    /* ==========================================================================
+       Typography - WCAG AA compliant, readable hierarchy
+       ========================================================================== */
+
+    .milkdown-theme-nord {
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .milkdown-theme-nord h1 {
+      font-size: var(--font-size-heading1);
+      line-height: var(--line-height-tight);
+      font-weight: var(--font-weight-semibold);
+      margin-top: var(--spacing-xxl);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .milkdown-theme-nord h2 {
+      font-size: var(--font-size-heading2);
+      line-height: var(--line-height-tight);
+      font-weight: var(--font-weight-semibold);
+      margin-top: var(--spacing-xl);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .milkdown-theme-nord h3 {
+      font-size: var(--font-size-heading3);
+      line-height: var(--line-height-normal);
+      font-weight: var(--font-weight-medium);
+      margin-top: var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .milkdown-theme-nord h4,
+    .milkdown-theme-nord h5,
+    .milkdown-theme-nord h6 {
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-normal);
+      font-weight: var(--font-weight-medium);
+      margin-top: var(--spacing-md);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .milkdown-theme-nord p {
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-relaxed);
+      margin: var(--spacing-sm) 0;
+    }
+
+    .milkdown-theme-nord ul,
+    .milkdown-theme-nord ol {
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-relaxed);
+      margin: var(--spacing-sm) 0;
+    }
+
+    /* Override Nord theme's padding-left with higher specificity */
+    .milkdown-theme-nord.milkdown-theme-nord ul,
+    .milkdown-theme-nord.milkdown-theme-nord ol {
+      padding-left: 0;
+    }
+
+    .milkdown-theme-nord li {
+      line-height: var(--line-height-relaxed);
+      margin: var(--spacing-xs) 0;
+    }
+
+    .milkdown-theme-nord blockquote {
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-relaxed);
+      padding-left: var(--spacing-lg);
+      color: var(--color-text-secondary);
+      margin: var(--spacing-md) 0;
+    }
+
+    /* ==========================================================================
+       List Item Block Component - Flexible, consistent spacing
+       ========================================================================== */
+
+    .milkdown-list-item-block {
+      list-style: none !important;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .milkdown-list-item-block > .list-item {
+      display: flex;
+      gap: var(--spacing-sm);
+      align-items: flex-start;
+      line-height: var(--line-height-relaxed);
+      min-height: calc(var(--font-size-body) * var(--line-height-relaxed));
+    }
+
+    .milkdown-list-item-block > .list-item > .children {
+      flex: 1;
+      min-width: 0;
+      /* Inherit parent line height for consistency */
+      line-height: inherit;
+    }
+
+    /* Remove p margin inside list items - this is the key fix */
+    .milkdown-list-item-block .children p {
+      margin: 0;
+    }
+
+    /* Label wrapper - 1 line height for proper alignment */
+    .milkdown-list-item-block .label-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 1rem;
+      /* Fixed height to match one line of text */
+      height: calc(var(--font-size-body) * var(--line-height-relaxed));
+      line-height: var(--line-height-relaxed);
+    }
+
+    /* Label icon styling */
+    .milkdown-list-item-block .label-wrapper .label {
+      font-size: var(--font-size-body);
+      /* Inherit line-height to match text - this is the key */
+      line-height: inherit;
+      transition: color var(--transition-fast);
+    }
+
+    /* Nested list items - consistent spacing */
+    .milkdown-list-item-block .milkdown-list-item-block {
+      margin-top: var(--spacing-xs);
+      margin-left: var(--spacing-lg);
+    }
+
+    /* ==========================================================================
+       List Markers - Semantic colors with theme support
+       ========================================================================== */
+
+    /* Bullet markers */
+    .milkdown-list-item-block .label-wrapper.bullet .label {
+      color: var(--color-marker-bullet);
+    }
+
+    /* Ordered list markers */
+    .milkdown-list-item-block .label-wrapper.ordered .label {
+      color: var(--color-marker-ordered);
+      font-weight: var(--font-weight-medium);
+    }
+
+    /* Task list - unchecked */
+    .milkdown-list-item-block .label-wrapper.unchecked .label {
+      color: var(--color-marker-unchecked);
+    }
+
+    /* Task list - checked */
+    .milkdown-list-item-block .label-wrapper.checked .label {
+      color: var(--color-marker-checked);
+    }
+
+    /* Hover effect for interactive markers */
+    .milkdown-list-item-block .label-wrapper:not(.bullet):not(.ordered):hover .label {
+      opacity: 0.7;
+      cursor: pointer;
+    }
+  </style>
+  <script type="module" crossorigin src="./index.js"></script>
+  <link rel="stylesheet" crossorigin href="./index.css">
+</head>
+<body>
+  <div id="editor"></div>
+</body>
+</html>
