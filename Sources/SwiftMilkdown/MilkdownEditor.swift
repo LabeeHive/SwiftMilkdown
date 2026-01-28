@@ -5,8 +5,34 @@
 //  A WYSIWYG Markdown editor powered by Milkdown, wrapped for SwiftUI.
 //
 
+import OSLog
 import SwiftUI
 import WebKit
+
+// MARK: - Error Types
+
+/// Errors that can occur in MilkdownEditor
+public enum MilkdownError: Error, Sendable {
+  /// Editor HTML resources not found in bundle
+  case resourceNotFound
+  /// Failed to load the editor in WebView
+  case loadFailed(underlying: Error)
+  /// Failed to update editor content
+  case contentUpdateFailed(underlying: Error)
+  /// Failed to update editor theme
+  case themeUpdateFailed(underlying: Error)
+}
+
+// MARK: - Logger
+
+extension Logger {
+  static let milkdown = Logger(
+    subsystem: Bundle.module.bundleIdentifier ?? "com.labeehive.SwiftMilkdown",
+    category: "Editor"
+  )
+}
+
+// MARK: - Platform Abstraction
 
 #if os(macOS)
   typealias PlatformViewRepresentable = NSViewRepresentable
@@ -18,10 +44,16 @@ public struct MilkdownEditor: PlatformViewRepresentable {
   @Binding var text: String
   @Environment(\.colorScheme) var colorScheme
   public var onTextChange: ((String) -> Void)?
+  public var onError: ((MilkdownError) -> Void)?
 
-  public init(text: Binding<String>, onTextChange: ((String) -> Void)? = nil) {
+  public init(
+    text: Binding<String>,
+    onTextChange: ((String) -> Void)? = nil,
+    onError: ((MilkdownError) -> Void)? = nil
+  ) {
     self._text = text
     self.onTextChange = onTextChange
+    self.onError = onError
   }
 
   public func makeCoordinator() -> Coordinator {
@@ -86,7 +118,8 @@ extension MilkdownEditor {
       let resourceDir = htmlURL.deletingLastPathComponent()
       webView.loadFileURL(htmlURL, allowingReadAccessTo: resourceDir)
     } else {
-      print("[SwiftMilkdown] Editor HTML not found in bundle")
+      Logger.milkdown.error("Editor HTML not found in bundle")
+      onError?(.resourceNotFound)
     }
 
     return webView
@@ -125,7 +158,8 @@ extension MilkdownEditor {
       didFail navigation: WKNavigation!,
       withError error: Error
     ) {
-      print("[SwiftMilkdown] Failed to load: \(error.localizedDescription)")
+      Logger.milkdown.error("Failed to load: \(error.localizedDescription)")
+      parent.onError?(.loadFailed(underlying: error))
     }
 
     public func webView(
@@ -133,7 +167,8 @@ extension MilkdownEditor {
       didFailProvisionalNavigation navigation: WKNavigation!,
       withError error: Error
     ) {
-      print("[SwiftMilkdown] Failed provisional navigation: \(error.localizedDescription)")
+      Logger.milkdown.error("Failed provisional navigation: \(error.localizedDescription)")
+      parent.onError?(.loadFailed(underlying: error))
     }
 
     // MARK: - WKScriptMessageHandler
@@ -204,9 +239,10 @@ extension MilkdownEditor {
         }
         """
 
-      webView.evaluateJavaScript(script) { _, error in
+      webView.evaluateJavaScript(script) { [weak self] _, error in
         if let error = error {
-          print("[SwiftMilkdown] Failed to set content: \(error.localizedDescription)")
+          Logger.milkdown.error("Failed to set content: \(error.localizedDescription)")
+          self?.parent.onError?(.contentUpdateFailed(underlying: error))
         }
       }
     }
@@ -228,9 +264,10 @@ extension MilkdownEditor {
         }
         """
 
-      webView.evaluateJavaScript(script) { _, error in
+      webView.evaluateJavaScript(script) { [weak self] _, error in
         if let error = error {
-          print("[SwiftMilkdown] Failed to set theme: \(error.localizedDescription)")
+          Logger.milkdown.error("Failed to set theme: \(error.localizedDescription)")
+          self?.parent.onError?(.themeUpdateFailed(underlying: error))
         }
       }
     }

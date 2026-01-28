@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "example:build": "pnpm run build && cd Example && swift build",
     "preexample": "pnpm run example:build",
-    "example": "./Example/.build/debug/ExampleApp"
+    "example": "./Example/.build/debug/ExampleApp",
+    "pretest": "pnpm run build",
+    "test": "swift test"
   },
   "keywords": [
     "markdown",
