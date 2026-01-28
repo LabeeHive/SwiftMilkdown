@@ -9,16 +9,26 @@ import SwiftUI
 import WebKit
 
 #if os(macOS)
-  public struct MilkdownEditor: NSViewRepresentable {
-    @Binding var text: String
-    @Environment(\.colorScheme) var colorScheme
-    public var onTextChange: ((String) -> Void)?
+  typealias PlatformViewRepresentable = NSViewRepresentable
+#elseif os(iOS)
+  typealias PlatformViewRepresentable = UIViewRepresentable
+#endif
 
-    public init(text: Binding<String>, onTextChange: ((String) -> Void)? = nil) {
-      self._text = text
-      self.onTextChange = onTextChange
-    }
+public struct MilkdownEditor: PlatformViewRepresentable {
+  @Binding var text: String
+  @Environment(\.colorScheme) var colorScheme
+  public var onTextChange: ((String) -> Void)?
 
+  public init(text: Binding<String>, onTextChange: ((String) -> Void)? = nil) {
+    self._text = text
+    self.onTextChange = onTextChange
+  }
+
+  public func makeCoordinator() -> Coordinator {
+    Coordinator(self)
+  }
+
+  #if os(macOS)
     public func makeNSView(context: Context) -> WKWebView {
       createWebView(context: context)
     }
@@ -27,25 +37,10 @@ import WebKit
       updateWebView(nsView, context: context)
     }
 
-    public func makeCoordinator() -> Coordinator {
-      Coordinator(self)
-    }
-
     public static func dismantleNSView(_ nsView: WKWebView, coordinator: Coordinator) {
       nsView.configuration.userContentController.removeScriptMessageHandler(forName: "editorBridge")
     }
-  }
-#elseif os(iOS)
-  public struct MilkdownEditor: UIViewRepresentable {
-    @Binding var text: String
-    @Environment(\.colorScheme) var colorScheme
-    public var onTextChange: ((String) -> Void)?
-
-    public init(text: Binding<String>, onTextChange: ((String) -> Void)? = nil) {
-      self._text = text
-      self.onTextChange = onTextChange
-    }
-
+  #elseif os(iOS)
     public func makeUIView(context: Context) -> WKWebView {
       createWebView(context: context)
     }
@@ -54,15 +49,11 @@ import WebKit
       updateWebView(uiView, context: context)
     }
 
-    public func makeCoordinator() -> Coordinator {
-      Coordinator(self)
-    }
-
     public static func dismantleUIView(_ uiView: WKWebView, coordinator: Coordinator) {
       uiView.configuration.userContentController.removeScriptMessageHandler(forName: "editorBridge")
     }
-  }
-#endif
+  #endif
+}
 
 // MARK: - Shared Implementation
 
