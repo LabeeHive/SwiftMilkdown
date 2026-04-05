@@ -16,7 +16,7 @@ importers:
         version: 7.20.0
       '@milkdown/plugin-prism':
         specifier: ^7.18.0
-        version: 7.19.0
+        version: 7.20.0
       '@milkdown/prose':
         specifier: ^7.18.0
         version: 7.18.0
@@ -255,26 +255,17 @@ packages:
   '@milkdown/core@7.18.0':
     resolution: {integrity: sha512-BUVR/72XwrtM3qHTTtXtmCtGfuaAexvSxosYIXw7d6ElbLiLIe3bOXjGwwgLHW3xsq23VKmYMsFqWLUFt6uGDQ==}
 
-  '@milkdown/core@7.19.0':
-    resolution: {integrity: sha512-x5vxnVCxxKSGCa1+J7I4RzEDl4KkvsXJF6xm1zCtvj0BCsbCFGiUVx2AtLcFkkvWZ5530CuOouDJ9FC27yoCoA==}
-
   '@milkdown/core@7.20.0':
     resolution: {integrity: sha512-X9LaUcIR4Y2oiY2J5tslavlPVOwIB3X8/9z1bOeBjlIPtr+urbkY7YEX86EeLV9LyRQ3+t+jXaLMCIjW1wsV6w==}
 
   '@milkdown/ctx@7.18.0':
     resolution: {integrity: sha512-F+t8U/akpY7Vw+KD+z32Itr6lrVLAGTVO79DN436BnFK/J9kiPzTRfTet6fMOj3NlwO/24lUluiPZd7qbCmn8A==}
 
-  '@milkdown/ctx@7.19.0':
-    resolution: {integrity: sha512-tdG9jm6yk6PRSvFZW5rRSqOGrKdcNdbXJwfGiEGr538pgKYhJ/yKPF3HmfupkhGyxabRP/PydQa4q/N/OOs03g==}
-
   '@milkdown/ctx@7.20.0':
     resolution: {integrity: sha512-LUK4xdsUngY2xCCvPTyHPifjAknJ5rE6VBjgsP+LySIUKeFUrhqzo/zz2vaOODKzm3DBMIhpZAoW3MAqxoMGIQ==}
 
   '@milkdown/exception@7.18.0':
     resolution: {integrity: sha512-sAyi4IqdChh4+lpgucmgDZNGjYuIRvJimZeMj0SdfdeHDABan5Nco3X+5yOGaBq1z9QOJG90+vEcEvUASHBmFw==}
-
-  '@milkdown/exception@7.19.0':
-    resolution: {integrity: sha512-ykgjxqrOueTCjmDGr0aidulZa1mC6bg4f8eDyMiT0wd4vB+3iYmQxY8NxdKwUqlz4UM5KBnbyFlGlgQsQDL+ew==}
 
   '@milkdown/exception@7.20.0':
     resolution: {integrity: sha512-u8EL7rbqgrWrPpkDhrxUYXauw2DO52JUQmuokrUZvqezmflo7pgIDCr+Rk6AQslzB4Xw+n9eYik5rXX3RXC7Qg==}
@@ -303,8 +294,8 @@ packages:
   '@milkdown/plugin-listener@7.20.0':
     resolution: {integrity: sha512-Sj+B63JfM3NVVS3uGXTPkoz8xx8MQYrR28pI9AaqX5q60tvCvOJw9E1ODvSsBEjeqnN4kablDthIugLlBhOlwQ==}
 
-  '@milkdown/plugin-prism@7.19.0':
-    resolution: {integrity: sha512-rvVPNbcNH+AiWAT+7+1i7+4cwYGgh7WX0qU+j1n8eZDZIhe8WouEONR6laz6ebcvo90ZbXBe2NFiZUZrEeB8jw==}
+  '@milkdown/plugin-prism@7.20.0':
+    resolution: {integrity: sha512-Iy8rh/KOzTmJIWpPhjzeF2NEkhldLZ0Edu0/zU3UBsom939ZcUdcsLujwpad7P6KlueBHw8QgSNe0gOEQ56yTQ==}
 
   '@milkdown/plugin-slash@7.20.0':
     resolution: {integrity: sha512-Qm3/ZxkGYd5XN+J/X91lGGu7SBzuQBOTOLjuJdg4qDBZmdEHlGojB+5BhCSAMB3WGyCpQQGbSqKOelUrXtj68w==}
@@ -327,9 +318,6 @@ packages:
   '@milkdown/prose@7.18.0':
     resolution: {integrity: sha512-bRDfgVM6uKRaejvju/FWdQMryQc4kSSso+fnABUbvbCKitXnsgRPvclsddbt3J92anQwLRDWr/qotx1NcyDM1Q==}
 
-  '@milkdown/prose@7.19.0':
-    resolution: {integrity: sha512-T/uYqSr4YT4uZtu4nBxTWyvZhVs2Lzh9qpcYH81PVwtZUT3b57+e+39s1D7UKAwFGi0qB7qZu/53l6pcw8radg==}
-
   '@milkdown/prose@7.20.0':
     resolution: {integrity: sha512-Qe6jmKcXsjOfpk8duDFdkLCEo5044L8HSyKVn7ewAe7XJJPUM6bPQaP130UAznq75/+TiKxFCzurcrBO3LzNRg==}
 
@@ -339,14 +327,8 @@ packages:
   '@milkdown/transformer@7.18.0':
     resolution: {integrity: sha512-AzTgqDktQw9nzgrpICjYNxScYwwnxmALPSyZ39Y0wNZJafi8QMVqLv4w2bhyYkxITXolPHdLAAsZXPKuMjrmNA==}
 
-  '@milkdown/transformer@7.19.0':
-    resolution: {integrity: sha512-Ui1vwbyTd1nAaieTylI8ibNbXSAxygkiFjkwOPGO5w0Eu7leH+0hVrbeGUCSzYdJfjGsN537CYu/8kvLIR+lQg==}
-
   '@milkdown/transformer@7.20.0':
     resolution: {integrity: sha512-h7KGFr1o5AYwc+hEfnA3Dldo4jRrYOB/7KExaqelcjUz++KYI/9LXMOsV7CpgjtLI3Xtf2IIRTZND1+p2nsOaw==}
-
-  '@milkdown/utils@7.19.0':
-    resolution: {integrity: sha512-aIu8j7TypVn+4ZWgrIUjpljIulAVwNERWNZgkfYLQLOv+BbF1gIbpoB7t3w0RD2EeENrEu0P3J0Sl5LDMbyDRQ==}
 
   '@milkdown/utils@7.20.0':
     resolution: {integrity: sha512-ciEhtLKhIW/Kaz/NRE5DUXVoMCdenn7S4mClrO7sZ/nXtmObnk3okJzSDnamQoDOcLOIbpOu1V3E1Btkvc5x9w==}
@@ -927,9 +909,6 @@ packages:
   prosemirror-view@1.41.5:
     resolution: {integrity: sha512-UDQbIPnDrjE8tqUBbPmCOZgtd75htE6W3r0JCmY9bL6W1iemDM37MZEKC49d+tdQ0v/CKx4gjxLoLsfkD2NiZA==}
 
-  prosemirror-view@1.41.7:
-    resolution: {integrity: sha512-jUwKNCEIGiqdvhlS91/2QAg21e4dfU5bH2iwmSDQeosXJgKF7smG0YSplOWK0cjSNgIqXe7VXqo7EIfUFJdt3w==}
-
   prosemirror-view@1.41.8:
     resolution: {integrity: sha512-TnKDdohEatgyZNGCDWIdccOHXhYloJwbwU+phw/a23KBvJIR9lWQWW7WHHK3vBdOLDNuF7TaX98GObUZOWkOnA==}
 
@@ -1254,18 +1233,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@milkdown/core@7.19.0':
-    dependencies:
-      '@milkdown/ctx': 7.19.0
-      '@milkdown/exception': 7.19.0
-      '@milkdown/prose': 7.19.0
-      '@milkdown/transformer': 7.19.0
-      remark-parse: 11.0.0
-      remark-stringify: 11.0.0
-      unified: 11.0.5
-    transitivePeerDependencies:
-      - supports-color
-
   '@milkdown/core@7.20.0':
     dependencies:
       '@milkdown/ctx': 7.20.0
@@ -1282,17 +1249,11 @@ snapshots:
     dependencies:
       '@milkdown/exception': 7.18.0
 
-  '@milkdown/ctx@7.19.0':
-    dependencies:
-      '@milkdown/exception': 7.19.0
-
   '@milkdown/ctx@7.20.0':
     dependencies:
       '@milkdown/exception': 7.20.0
 
   '@milkdown/exception@7.18.0': {}
-
-  '@milkdown/exception@7.19.0': {}
 
   '@milkdown/exception@7.20.0': {}
 
@@ -1396,11 +1357,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@milkdown/plugin-prism@7.19.0':
+  '@milkdown/plugin-prism@7.20.0':
     dependencies:
-      '@milkdown/ctx': 7.19.0
-      '@milkdown/prose': 7.19.0
-      '@milkdown/utils': 7.19.0
+      '@milkdown/ctx': 7.20.0
+      '@milkdown/prose': 7.20.0
+      '@milkdown/utils': 7.20.0
       '@types/hast': 3.0.4
       refractor: 5.0.0
     transitivePeerDependencies:
@@ -1491,23 +1452,6 @@ snapshots:
       prosemirror-transform: 1.11.0
       prosemirror-view: 1.41.5
 
-  '@milkdown/prose@7.19.0':
-    dependencies:
-      '@milkdown/exception': 7.19.0
-      prosemirror-changeset: 2.4.0
-      prosemirror-commands: 1.7.1
-      prosemirror-dropcursor: 1.8.2
-      prosemirror-gapcursor: 1.4.1
-      prosemirror-history: 1.5.0
-      prosemirror-inputrules: 1.5.1
-      prosemirror-keymap: 1.2.3
-      prosemirror-model: 1.25.4
-      prosemirror-schema-list: 1.5.1
-      prosemirror-state: 1.4.4
-      prosemirror-tables: 1.8.5
-      prosemirror-transform: 1.11.0
-      prosemirror-view: 1.41.7
-
   '@milkdown/prose@7.20.0':
     dependencies:
       '@milkdown/exception': 7.20.0
@@ -1543,32 +1487,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@milkdown/transformer@7.19.0':
-    dependencies:
-      '@milkdown/exception': 7.19.0
-      '@milkdown/prose': 7.19.0
-      remark: 15.0.1
-      unified: 11.0.5
-    transitivePeerDependencies:
-      - supports-color
-
   '@milkdown/transformer@7.20.0':
     dependencies:
       '@milkdown/exception': 7.20.0
       '@milkdown/prose': 7.20.0
       remark: 15.0.1
       unified: 11.0.5
-    transitivePeerDependencies:
-      - supports-color
-
-  '@milkdown/utils@7.19.0':
-    dependencies:
-      '@milkdown/core': 7.19.0
-      '@milkdown/ctx': 7.19.0
-      '@milkdown/exception': 7.19.0
-      '@milkdown/prose': 7.19.0
-      '@milkdown/transformer': 7.19.0
-      nanoid: 5.1.7
     transitivePeerDependencies:
       - supports-color
 
@@ -2347,12 +2271,6 @@ snapshots:
       prosemirror-model: 1.25.4
 
   prosemirror-view@1.41.5:
-    dependencies:
-      prosemirror-model: 1.25.4
-      prosemirror-state: 1.4.4
-      prosemirror-transform: 1.11.0
-
-  prosemirror-view@1.41.7:
     dependencies:
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
