@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   release:
     runs-on: ubuntu-latest
