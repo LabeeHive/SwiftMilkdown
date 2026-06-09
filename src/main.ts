@@ -11,6 +11,7 @@ import { prism } from '@milkdown/plugin-prism'
 import { nord } from '@milkdown/theme-nord'
 import { setupBridge } from './bridge'
 import { linkCardNode, linkCardPlugin } from './linkPreview'
+import { headingBackspacePlugin } from './headingBackspace'
 
 // Import Nord theme styles
 import '@milkdown/theme-nord/style.css'
@@ -54,6 +55,7 @@ async function createEditor() {
       }))
     })
     .config(nord)
+    .use(headingBackspacePlugin)
     .use(commonmark)
     .use(gfm)
     .use(listItemBlockComponent)

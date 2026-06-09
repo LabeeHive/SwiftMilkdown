@@ -110,7 +110,13 @@ extension MilkdownEditor {
       webView.scrollView.backgroundColor = .clear
     #endif
 
-    if let htmlURL = Bundle.module.url(
+    // Dev override: load from Vite dev server when EDITOR_DEV_URL is set,
+    // so TS changes hot-reload without rebuilding Swift resources.
+    if let devURL = ProcessInfo.processInfo.environment["EDITOR_DEV_URL"],
+      let url = URL(string: devURL)
+    {
+      webView.load(URLRequest(url: url))
+    } else if let htmlURL = Bundle.module.url(
       forResource: "index",
       withExtension: "html",
       subdirectory: "Editor"
