@@ -23,11 +23,106 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 struct ContentView: View {
+  @Environment(\.colorScheme) private var systemColorScheme
   @State private var markdown: String = demoMarkdown
+  // nil until the user picks one explicitly — that way the initial value
+  // follows the system appearance instead of being hardcoded.
+  @State private var themeOverride: ThemeMode? = nil
 
   var body: some View {
-    MilkdownEditor(text: $markdown)
-      .frame(minWidth: 600, minHeight: 400)
+    VStack(spacing: 0) {
+      DebugMenuBar(
+        themeMode: themeBinding,
+        onCopyMarkdown: copyMarkdown,
+        onResetContent: resetContent
+      )
+      MilkdownEditor(text: $markdown)
+    }
+    .frame(minWidth: 600, minHeight: 400)
+    .preferredColorScheme(themeOverride?.colorScheme)
+  }
+
+  private func copyMarkdown() {
+    NSPasteboard.general.clearContents()
+    NSPasteboard.general.setString(markdown, forType: .string)
+  }
+
+  private func resetContent() {
+    markdown = demoMarkdown
+  }
+
+  /// Reflects the system scheme until the user picks something,
+  /// then reflects the explicit choice.
+  private var themeBinding: Binding<ThemeMode> {
+    Binding(
+      get: {
+        themeOverride ?? (systemColorScheme == .dark ? .dark : .light)
+      },
+      set: { themeOverride = $0 }
+    )
+  }
+}
+
+/// Debug menu header bar for the Example app.
+struct DebugMenuBar: View {
+  @Binding var themeMode: ThemeMode
+  let onCopyMarkdown: () -> Void
+  let onResetContent: () -> Void
+
+  var body: some View {
+    HStack(spacing: 12) {
+      Spacer()
+      Button {
+        onResetContent()
+      } label: {
+        Image(systemName: "arrow.counterclockwise")
+      }
+      .help("Reset to demo content")
+
+      Button {
+        onCopyMarkdown()
+      } label: {
+        Image(systemName: "doc.on.doc")
+      }
+      .help("Copy markdown to clipboard")
+
+      Picker("Theme", selection: $themeMode) {
+        ForEach(ThemeMode.allCases) { mode in
+          Text(mode.label).tag(mode)
+        }
+      }
+      .pickerStyle(.segmented)
+      .labelsHidden()
+      .fixedSize()
+    }
+    .padding(.horizontal, 12)
+    .padding(.vertical, 10)
+    .frame(maxWidth: .infinity)
+    .background(.ultraThinMaterial)
+    .overlay(alignment: .bottom) {
+      Divider()
+    }
+  }
+}
+
+enum ThemeMode: String, CaseIterable, Identifiable {
+  case light
+  case dark
+
+  var id: String { rawValue }
+
+  var label: String {
+    switch self {
+    case .light: return "Light"
+    case .dark: return "Dark"
+    }
+  }
+
+  var colorScheme: ColorScheme {
+    switch self {
+    case .light: return .light
+    case .dark: return .dark
+    }
   }
 }
 
