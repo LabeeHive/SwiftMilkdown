@@ -19,6 +19,9 @@ import '@milkdown/theme-nord/style.css'
 // Import Prism theme for syntax highlighting
 import 'prism-themes/themes/prism-nord.css'
 
+// Import editor styles (tokens, reset, typography, components)
+import './styles/index.css'
+
 // Import link card styles
 import './linkPreview/linkCard.css'
 

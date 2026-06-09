@@ -1,0 +1,111 @@
+/* ==========================================================================
+   Milkdown list item block component
+   ========================================================================== */
+
+.milkdown-list-item-block {
+  list-style: none !important;
+  padding-left: 0;
+  margin: 0;
+}
+
+.milkdown-list-item-block > .list-item {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: flex-start;
+  line-height: var(--line-height-relaxed);
+  min-height: calc(var(--font-size-body) * var(--line-height-relaxed));
+}
+
+.milkdown-list-item-block > .list-item > .children {
+  flex: 1;
+  min-width: 0;
+  line-height: inherit;
+}
+
+/* Strip the editor-wide <p> margin inside list items */
+.milkdown-list-item-block .children p {
+  margin: 0;
+}
+
+/* Label wrapper - one line-height tall for vertical alignment with text */
+.milkdown-list-item-block .label-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1rem;
+  height: calc(var(--font-size-body) * var(--line-height-relaxed));
+  line-height: var(--line-height-relaxed);
+}
+
+.milkdown-list-item-block .label-wrapper .label {
+  font-size: var(--font-size-body);
+  line-height: inherit;
+  transition: color var(--transition-fast);
+}
+
+.milkdown-list-item-block .milkdown-list-item-block {
+  margin-top: var(--spacing-xs);
+  margin-left: var(--spacing-lg);
+}
+
+/* ==========================================================================
+   Marker colors (per type)
+   ========================================================================== */
+
+.milkdown-list-item-block .label-wrapper.bullet .label {
+  color: var(--color-marker-bullet);
+}
+
+.milkdown-list-item-block .label-wrapper.ordered .label {
+  color: var(--color-marker-ordered);
+  font-weight: var(--font-weight-medium);
+}
+
+.milkdown-list-item-block .label-wrapper.unchecked .label {
+  color: var(--color-marker-unchecked);
+}
+
+.milkdown-list-item-block .label-wrapper.checked .label {
+  color: var(--color-marker-checked);
+}
+
+/* Hover on interactive markers (task items) */
+.milkdown-list-item-block
+  .label-wrapper:not(.bullet):not(.ordered):hover
+  .label {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Marker visibility — bullet & checkbox
+   Renders the bullet as a CSS-drawn disc and sizes the native checkbox so
+   both are clearly visible. Does NOT touch line-height, indent, or the
+   existing label-wrapper geometry — the disc and checkbox fit inside the
+   existing 1rem × 1lh wrapper.
+   ========================================================================== */
+
+/* Bullet: replace the small • glyph with a CSS disc using currentColor */
+.milkdown-list-item-block .label.bullet {
+  font-size: 0;
+}
+
+.milkdown-list-item-block .label.bullet::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: currentColor;
+  vertical-align: middle;
+}
+
+/* Native checkbox: size up and theme with accent-color (Safari 15.4+) */
+.milkdown-list-item-block .label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
