@@ -6,7 +6,6 @@ export default defineConfig({
     // Output to SPM Resources directory
     outDir: 'Sources/SwiftMilkdown/Resources/Editor',
     emptyOutDir: true,
-    minify: 'esbuild',
     assetsDir: '',
     rollupOptions: {
       output: {
