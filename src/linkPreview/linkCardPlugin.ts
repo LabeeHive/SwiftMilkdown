@@ -4,6 +4,7 @@ import { editorViewCtx } from '@milkdown/kit/core'
 import type { Ctx } from '@milkdown/kit/ctx'
 import type { LinkPreviewResponse } from './types'
 import { linkCardNodeId } from './linkCardNode'
+import { applyRemote } from '../remoteTransaction'
 
 /**
  * Plugin key for link card functionality
@@ -170,7 +171,7 @@ export function handleLinkPreviewResponse(ctx: Ctx, response: LinkPreviewRespons
   const newNode = linkCardType.create(attrs)
   const pos = targetPos as number
   const tr = view.state.tr.replaceWith(pos, pos + targetNode.nodeSize, newNode)
-  view.dispatch(tr)
+  applyRemote(view, tr)
 }
 
 /**
@@ -241,5 +242,5 @@ export function scanAndInsertCards(ctx: Ctx) {
     requestLinkPreview(requestId, url)
   }
 
-  view.dispatch(tr)
+  applyRemote(view, tr)
 }

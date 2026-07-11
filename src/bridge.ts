@@ -3,6 +3,7 @@ import { editorViewCtx, parserCtx } from '@milkdown/kit/core'
 import { Slice } from '@milkdown/prose/model'
 import type { LinkPreviewResponse } from './linkPreview/types'
 import { handleLinkPreviewResponse, scanAndInsertCards } from './linkPreview/linkCardPlugin'
+import { applyRemote } from './remoteTransaction'
 
 /**
  * Bridge for communication between JavaScript and Swift
@@ -70,7 +71,7 @@ class SwiftBridge {
           state.doc.content.size,
           new Slice(doc.content, 0, 0)
         )
-        view.dispatch(tr)
+        applyRemote(view, tr)
       })
 
       // Scan for standalone URLs and insert preview cards
