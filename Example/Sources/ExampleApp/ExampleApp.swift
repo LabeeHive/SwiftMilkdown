@@ -29,14 +29,35 @@ struct ContentView: View {
   // follows the system appearance instead of being hardcoded.
   @State private var themeOverride: ThemeMode? = nil
 
+  // On-screen log of onTextChange firings. Useful when touching anything
+  // that might affect the setContent/echo contract: a genuine user edit
+  // should always log an entry, while a programmatic content load (initial
+  // load, "Reset to demo content") should never log one.
+  @State private var changeLog: [String] = []
+  @State private var isChangeLogVisible = false
+
   var body: some View {
     VStack(spacing: 0) {
       DebugMenuBar(
         themeMode: themeBinding,
+        isChangeLogVisible: $isChangeLogVisible,
         onCopyMarkdown: copyMarkdown,
         onResetContent: resetContent
       )
-      MilkdownEditor(text: $markdown)
+      HStack(spacing: 0) {
+        MilkdownEditor(
+          text: $markdown,
+          onTextChange: { _ in
+            let timestamp = DateFormatter.localizedString(
+              from: Date(), dateStyle: .none, timeStyle: .medium)
+            changeLog.append("[\(timestamp)] onTextChange fired")
+          }
+        )
+        if isChangeLogVisible {
+          ChangeLogPanel(entries: changeLog, onClear: { changeLog.removeAll() })
+            .frame(width: 260)
+        }
+      }
     }
     .frame(minWidth: 600, minHeight: 400)
     .preferredColorScheme(themeOverride?.colorScheme)
@@ -63,9 +84,47 @@ struct ContentView: View {
   }
 }
 
+/// Visible log of `onTextChange` firings, for manually verifying that
+/// programmatic content loads don't spuriously echo as if the user had
+/// edited the document.
+struct ChangeLogPanel: View {
+  let entries: [String]
+  let onClear: () -> Void
+
+  var body: some View {
+    VStack(alignment: .leading, spacing: 0) {
+      HStack {
+        Text("onTextChange log")
+          .font(.headline)
+        Spacer()
+        Button("Clear", action: onClear)
+      }
+      .padding(8)
+      Divider()
+      ScrollView {
+        VStack(alignment: .leading, spacing: 4) {
+          if entries.isEmpty {
+            Text("(no events yet)")
+              .foregroundStyle(.secondary)
+              .font(.caption)
+          }
+          ForEach(Array(entries.enumerated()), id: \.offset) { _, entry in
+            Text(entry)
+              .font(.caption.monospaced())
+          }
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+      }
+    }
+    .background(.ultraThinMaterial)
+  }
+}
+
 /// Debug menu header bar for the Example app.
 struct DebugMenuBar: View {
   @Binding var themeMode: ThemeMode
+  @Binding var isChangeLogVisible: Bool
   let onCopyMarkdown: () -> Void
   let onResetContent: () -> Void
 
@@ -85,6 +144,12 @@ struct DebugMenuBar: View {
         Image(systemName: "doc.on.doc")
       }
       .help("Copy markdown to clipboard")
+
+      Toggle(isOn: $isChangeLogVisible) {
+        Image(systemName: "text.append")
+      }
+      .toggleStyle(.button)
+      .help("Show onTextChange log")
 
       Picker("Theme", selection: $themeMode) {
         ForEach(ThemeMode.allCases) { mode in
