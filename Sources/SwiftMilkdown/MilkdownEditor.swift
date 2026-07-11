@@ -98,8 +98,11 @@ extension MilkdownEditor {
     config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
     config.userContentController.add(context.coordinator, name: "editorBridge")
 
-    let webView = WKWebView(frame: .zero, configuration: config)
+    let webView = PasteAsPlainTextWebView(frame: .zero, configuration: config)
     webView.navigationDelegate = context.coordinator
+    webView.onPasteAsPlainText = { [weak coordinator = context.coordinator] text in
+      coordinator?.pasteAsPlainText(text)
+    }
     context.coordinator.webView = webView
 
     #if os(macOS)
@@ -262,6 +265,35 @@ extension MilkdownEditor {
         if let error = error {
           Logger.milkdown.error("Failed to set content: \(error.localizedDescription)")
           self?.parent.onError?(.contentUpdateFailed(underlying: error))
+        }
+      }
+    }
+
+    /// Sends pasteboard text read natively (by `PasteAsPlainTextWebView`) to
+    /// the editor bridge, to be inserted stripped of any formatting.
+    func pasteAsPlainText(_ text: String) {
+      guard isEditorReady, let webView = webView else {
+        return
+      }
+
+      guard let jsonData = try? JSONSerialization.data(withJSONObject: ["text": text]),
+        let jsonString = String(data: jsonData, encoding: .utf8)
+      else {
+        return
+      }
+
+      let script = """
+        try {
+          const data = \(jsonString);
+          window.editorBridge?.pasteAsPlainText(data.text);
+        } catch (e) {
+          console.error('Error pasting as plain text:', e);
+        }
+        """
+
+      webView.evaluateJavaScript(script) { _, error in
+        if let error = error {
+          Logger.milkdown.error("Failed to paste as plain text: \(error.localizedDescription)")
         }
       }
     }

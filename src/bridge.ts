@@ -88,6 +88,27 @@ class SwiftBridge {
   }
 
   /**
+   * Insert plain text at the current selection, discarding any HTML
+   * formatting. Called from Swift when the user triggers the "paste as
+   * plain text" shortcut; the text itself is read natively from the
+   * platform pasteboard on the Swift side.
+   */
+  pasteAsPlainText(text: string) {
+    if (!this.editor) {
+      return
+    }
+
+    try {
+      this.editor.action((ctx) => {
+        const view = ctx.get(editorViewCtx)
+        view.pasteText(text)
+      })
+    } catch (error) {
+      console.error('Error pasting as plain text:', error)
+    }
+  }
+
+  /**
    * Focus the editor
    */
   focus() {

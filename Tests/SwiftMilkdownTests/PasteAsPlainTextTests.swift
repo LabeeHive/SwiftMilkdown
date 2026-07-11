@@ -1,41 +1,33 @@
+//
+//  PasteAsPlainTextTests.swift
+//  SwiftMilkdown
+//
+//  Regression tests for the editor bridge's plain-text paste entry point.
+//
+//  The actual pasteboard read and shortcut key capture (⌘⇧V) happen natively
+//  on the Swift side (see `PasteAsPlainTextWebView`), outside the web
+//  content's event pipeline — that flow is covered by
+//  `PasteAsPlainTextWebViewTests`. These tests cover the JS-side half: once
+//  Swift hands plain text to `window.editorBridge.pasteAsPlainText(text)`, it
+//  must be inserted via ProseMirror's standard `pasteText` path, discarding
+//  any formatting, without disturbing the default rich-HTML paste behaviour.
+//
+
 import WebKit
 import XCTest
 
 @testable import SwiftMilkdown
 
-// MARK: - RED test for a pending feature
-//
-// "Paste as plain text": there is currently no way to force a plain-text
-// paste — HTML clipboard content is always inserted as rich text. Driven
-// purely from JS against a headless WKWebView loading the real built bundle
-// (same harness pattern as SetContentEchoTests.swift) — no XCUITest / manual
-// verification needed. This is intentionally RED: it asserts the
-// implemented behaviour and currently fails against today's code. Flip it
-// GREEN once the feature lands.
-
 @MainActor
 final class PasteAsPlainTextTests: XCTestCase {
 
-  // MARK: paste as plain text
-
-  /// RED until a "paste as plain text" entry point exists.
-  ///
-  /// Baseline confirmed working today: a synthetic `ClipboardEvent` with a
-  /// `DataTransfer` carrying both `text/plain` and `text/html` reaches
-  /// Milkdown's real `handlePaste` (dispatchEvent returns `false`, i.e.
-  /// `preventDefault()`'d by the handler) and is inserted as rich HTML
-  /// (`<strong>`). That baseline is asserted below and should stay GREEN.
-  ///
-  /// The still-missing behaviour: there is no way to force a plain-text
-  /// paste. This test calls a not-yet-implemented bridge hook
-  /// (`window.editorBridge.pasteAsPlainText`) as the assumed entry point —
-  /// adjust the call site to match whatever API/shortcut the implementation
-  /// actually lands on.
-  func testPasteAsPlainTextStripsFormatting() async throws {
+  /// Baseline regression check: a normal paste with `text/html` content
+  /// present is still inserted as rich HTML — the plain-text entry point must
+  /// not affect default paste behaviour.
+  func testNormalPasteStaysRich() async throws {
     let harness = try PasteAsPlainTextHarness()
     try await harness.waitUntilReady()
 
-    // Baseline (should stay GREEN): normal paste stays rich.
     let richResult =
       try await harness.webView.evaluateJavaScript(
         """
@@ -58,43 +50,31 @@ final class PasteAsPlainTextTests: XCTestCase {
       try await harness.webView.evaluateJavaScript(
         "document.querySelector('#editor .ProseMirror')?.innerHTML || ''"
       ) as? String
-    XCTAssertEqual(richHTML, "<p><strong>hello world</strong></p>", "baseline rich paste regressed")
+    XCTAssertEqual(richHTML, "<p><strong>hello world</strong></p>")
+  }
 
-    // RED: no plain-text paste entry point implemented yet.
+  /// Text handed to `pasteAsPlainText` must be inserted verbatim, with no
+  /// formatting — there is no HTML source at all in this path, since the
+  /// text comes directly from the native pasteboard read.
+  func testPasteAsPlainTextInsertsPlainText() async throws {
+    let harness = try PasteAsPlainTextHarness()
+    try await harness.waitUntilReady()
+
     _ = try await harness.webView.evaluateJavaScript(
       "window.editorBridge.setContent(''); true"
     )
     try await Task.sleep(nanoseconds: 200_000_000)
 
-    let plainResult =
-      try await harness.webView.evaluateJavaScript(
-        """
-        (function() {
-          if (typeof window.editorBridge.pasteAsPlainText !== 'function') {
-            return { ok: false, error: 'pasteAsPlainText not implemented' };
-          }
-          const dt = new DataTransfer();
-          dt.setData('text/plain', 'hello world');
-          dt.setData('text/html', '<b>hello world</b>');
-          window.editorBridge.pasteAsPlainText(dt);
-          return { ok: true };
-        })()
-        """
-      ) as? [String: Any]
-
-    XCTAssertEqual(
-      plainResult?["ok"] as? Bool, true,
-      "paste-as-plain-text entry point is not implemented yet: \(String(describing: plainResult))"
+    _ = try await harness.webView.evaluateJavaScript(
+      "window.editorBridge.pasteAsPlainText('hello world'); true"
     )
-
     try await Task.sleep(nanoseconds: 300_000_000)
+
     let plainHTML =
       try await harness.webView.evaluateJavaScript(
         "document.querySelector('#editor .ProseMirror')?.innerHTML || ''"
       ) as? String
-    XCTAssertEqual(
-      plainHTML, "<p>hello world</p>",
-      "plain-text paste must strip HTML formatting")
+    XCTAssertEqual(plainHTML, "<p>hello world</p>")
   }
 }
 
