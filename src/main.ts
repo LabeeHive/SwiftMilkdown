@@ -1,5 +1,5 @@
 import { defaultValueCtx, Editor, rootCtx } from '@milkdown/kit/core'
-import { commonmark } from '@milkdown/kit/preset/commonmark'
+import { commonmark, linkSchema } from '@milkdown/kit/preset/commonmark'
 import { gfm } from '@milkdown/kit/preset/gfm'
 import { listener, listenerCtx } from '@milkdown/kit/plugin/listener'
 import { history } from '@milkdown/kit/plugin/history'
@@ -39,6 +39,17 @@ async function createEditor() {
         // Send changes to Swift
         setupBridge().sendContent(markdown)
       })
+
+      // Link mark must not be inclusive: typing right after a link should
+      // start plain text, not extend the link. This matches the standard
+      // rich-text editor convention (see prosemirror-example-setup's link
+      // schema) and is not addressed by Milkdown core (see
+      // https://github.com/Milkdown/milkdown/issues/1835, closed as
+      // "not planned" — app-level schema customization is the expected fix).
+      ctx.update(linkSchema.key, (prev) => (c) => ({
+        ...prev(c),
+        inclusive: false,
+      }))
 
       // Customize list item markers for modern appearance
       ctx.update(listItemBlockConfig.key, (prev) => ({
