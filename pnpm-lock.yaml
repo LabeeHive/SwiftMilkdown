@@ -19,7 +19,7 @@ importers:
         version: 7.21.2
       '@milkdown/prose':
         specifier: ^7.18.0
-        version: 7.21.2
+        version: 7.21.3
       '@milkdown/theme-nord':
         specifier: ^7.18.0
         version: 7.21.2
@@ -114,6 +114,9 @@ packages:
   '@milkdown/exception@7.21.2':
     resolution: {integrity: sha512-/6QkN1XmEtVHe5XhPm87lCUtV9qQNRHuAhxki/wtF+10vAeq8xOBW9/S5Kv/zpS9DSgdM/Ce+BPO3+yT1FIvWg==}
 
+  '@milkdown/exception@7.21.3':
+    resolution: {integrity: sha512-+Mne/hJ8Wjfdl4dCG5+Sm+BXWK5StacyP4pcQkCvPw/sBbNAP9eTF7+TC/KRJw/b5Bz60wqztbNkSlDuqd2fSQ==}
+
   '@milkdown/kit@7.21.2':
     resolution: {integrity: sha512-93E5PgJgQXTwn0N8xSmk3Y6+oVvMMQYDV3HF22ZNE8tFVRLOz3vMLJFfxncxY0CONadCpreoOT3Ut+p9JYjySA==}
 
@@ -167,6 +170,9 @@ packages:
 
   '@milkdown/prose@7.21.2':
     resolution: {integrity: sha512-ufnHhRaevLbqISBpOA5Rl4+S66n+h0JRfoZw2j/WyJ1eBNHg42xoQNXUEI9YiP/GoQPKeOitKux50GpafyNtQw==}
+
+  '@milkdown/prose@7.21.3':
+    resolution: {integrity: sha512-yEDOZ5S1eY2n0EyQ4i+MZ0Y/bpsi8FMYMoMTbJjxS3cHWMQSIyA8cjd0/DWF+ShAY+DhaCcQya2SGK04r908sA==}
 
   '@milkdown/theme-nord@7.21.2':
     resolution: {integrity: sha512-c/Ps9+SHnVt/Ti4RFV/NTQHZq/o+zyPe/RKjv8S7r7eUWSLZ1QrRnCig+h6muFpACBPMGO4FSRxyRa9HYOw9Lw==}
@@ -1171,6 +1177,8 @@ snapshots:
 
   '@milkdown/exception@7.21.2': {}
 
+  '@milkdown/exception@7.21.3': {}
+
   '@milkdown/kit@7.21.2(@codemirror/language@6.12.4)(@codemirror/state@6.7.1)(@codemirror/view@6.43.6)(typescript@7.0.2)':
     dependencies:
       '@milkdown/components': 7.21.2(@codemirror/language@6.12.4)(@codemirror/state@6.7.1)(@codemirror/view@6.43.6)(typescript@7.0.2)
@@ -1375,6 +1383,23 @@ snapshots:
   '@milkdown/prose@7.21.2':
     dependencies:
       '@milkdown/exception': 7.21.2
+      prosemirror-changeset: 2.4.1
+      prosemirror-commands: 1.7.1
+      prosemirror-dropcursor: 1.8.3
+      prosemirror-gapcursor: 1.4.1
+      prosemirror-history: 1.5.0
+      prosemirror-inputrules: 1.5.1
+      prosemirror-keymap: 1.2.3
+      prosemirror-model: 1.25.11
+      prosemirror-schema-list: 1.5.1
+      prosemirror-state: 1.4.4
+      prosemirror-tables: 1.8.5
+      prosemirror-transform: 1.12.0
+      prosemirror-view: 1.42.1
+
+  '@milkdown/prose@7.21.3':
+    dependencies:
+      '@milkdown/exception': 7.21.3
       prosemirror-changeset: 2.4.1
       prosemirror-commands: 1.7.1
       prosemirror-dropcursor: 1.8.3
