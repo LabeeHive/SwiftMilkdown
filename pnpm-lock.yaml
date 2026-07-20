@@ -13,7 +13,7 @@ importers:
         version: 7.21.2(@codemirror/language@6.12.4)(@codemirror/state@6.7.1)(@codemirror/view@6.43.6)(typescript@7.0.2)
       '@milkdown/plugin-emoji':
         specifier: ^7.18.0
-        version: 7.21.2
+        version: 7.21.3
       '@milkdown/plugin-prism':
         specifier: ^7.18.0
         version: 7.21.2
@@ -108,8 +108,14 @@ packages:
   '@milkdown/core@7.21.2':
     resolution: {integrity: sha512-b9xrcN9g+o05skEc4O78vGPvwJm1sbfqIPROncZH2vSE/lOIcp9AR1SdqveWmhymd/QILgTzW9WsnJfgQkGMXQ==}
 
+  '@milkdown/core@7.21.3':
+    resolution: {integrity: sha512-84CYaJEAFZtG6tXilYM/SIG7WKQ56GMQLDC8+HBmilaHqqQuReqYlngAVA0bkDrDEsy/UMNTWsw0pEk00VTfVw==}
+
   '@milkdown/ctx@7.21.2':
     resolution: {integrity: sha512-dqiA0GeERv86QEde+ZvxqBy4cDmfAsfLTIpi10doFJLKLerei23TVb5lHD8/CGUVqpS995MTu3dAFRBs9C0q5Q==}
+
+  '@milkdown/ctx@7.21.3':
+    resolution: {integrity: sha512-3mYsMdYsK1JbiHAo1LMqjyVYbVqOmNXHRI97w4m09Y+1Md6O74Z2snqKVRbbJQq8eKwN4GMOYdjF9hcasJVCJg==}
 
   '@milkdown/exception@7.21.2':
     resolution: {integrity: sha512-/6QkN1XmEtVHe5XhPm87lCUtV9qQNRHuAhxki/wtF+10vAeq8xOBW9/S5Kv/zpS9DSgdM/Ce+BPO3+yT1FIvWg==}
@@ -132,8 +138,8 @@ packages:
   '@milkdown/plugin-diff@7.21.2':
     resolution: {integrity: sha512-I1aLHTAcKk04MFDA/RmhRYPY4kHoSjZf9yoCxl5eNYi3PtOzJ2aoKcBi/uNbU0TG+MoJc/DKizVcaI1t4jyAWg==}
 
-  '@milkdown/plugin-emoji@7.21.2':
-    resolution: {integrity: sha512-Y/RD3GqnsTlnwyF9Wf6VzDN47tFawWAGAbg9eRdUvIirBr+x3Lwrhf4SudEvvDIroJth5sZZDpTjCGK6RstRMQ==}
+  '@milkdown/plugin-emoji@7.21.3':
+    resolution: {integrity: sha512-EG47T+I0TFldo6BvgYOYP0Vs2xnJH7Z1O029wjoa+7/EuXz6BeeELBRXBaWnG8VYFWXqq6RveeL/vbzskkoBpQ==}
 
   '@milkdown/plugin-history@7.21.2':
     resolution: {integrity: sha512-iymGm2fm/desC0tAukz3ubHZ7KSj0UFvHZTY8H55IzPnRLsVErnGFOZ5l/VFeHQI4xoBq+NWUBuPFFF4ApxBlw==}
@@ -180,8 +186,14 @@ packages:
   '@milkdown/transformer@7.21.2':
     resolution: {integrity: sha512-j2VQ6baKy6b6rAo/yo00YwSsWHoW0sqgwRTDqSCwXW8dgdFtl4M2i/73exRLcRQ4MvDOHrSqGS5RcRz+fzPOeQ==}
 
+  '@milkdown/transformer@7.21.3':
+    resolution: {integrity: sha512-0OmceNYpmLwZYZLLwI+ABtVh3GdbRGBGVsfgCprqp0f6L+Y+qZcnAEDPExPqIXDEBuuyaz57UHxBmaskN7CRNg==}
+
   '@milkdown/utils@7.21.2':
     resolution: {integrity: sha512-m1ZJDnh+/tnIBxLhh5euNGr1WXvsGnJkaGctsd/an5+73HqHOdtWD6L7oJF8+DQG4Kksr4WPNNZutqYGb6OAxw==}
+
+  '@milkdown/utils@7.21.3':
+    resolution: {integrity: sha512-pJxcEy1cJKRT4CsDLJ8OlokKww2PMBdlULCtFM4ccN+7EBc//fpR8ZnnOzoSnPxtgsbijaLzSSWiXBE5BdlolQ==}
 
   '@napi-rs/wasm-runtime@1.1.6':
     resolution: {integrity: sha512-ZLv/JdUfkvOy9eCnnBaGfiO+XimbjebAeO+MRQqD/B+FR1tnRN0tpKSJHRbE8sFfS6aqsXZ67TQjfwfsxULVbg==}
@@ -1171,9 +1183,25 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@milkdown/core@7.21.3':
+    dependencies:
+      '@milkdown/ctx': 7.21.3
+      '@milkdown/exception': 7.21.3
+      '@milkdown/prose': 7.21.3
+      '@milkdown/transformer': 7.21.3
+      remark-parse: 11.0.0
+      remark-stringify: 11.0.0
+      unified: 11.0.5
+    transitivePeerDependencies:
+      - supports-color
+
   '@milkdown/ctx@7.21.2':
     dependencies:
       '@milkdown/exception': 7.21.2
+
+  '@milkdown/ctx@7.21.3':
+    dependencies:
+      '@milkdown/exception': 7.21.3
 
   '@milkdown/exception@7.21.2': {}
 
@@ -1249,14 +1277,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@milkdown/plugin-emoji@7.21.2':
+  '@milkdown/plugin-emoji@7.21.3':
     dependencies:
-      '@milkdown/core': 7.21.2
-      '@milkdown/ctx': 7.21.2
-      '@milkdown/exception': 7.21.2
-      '@milkdown/prose': 7.21.2
-      '@milkdown/transformer': 7.21.2
-      '@milkdown/utils': 7.21.2
+      '@milkdown/core': 7.21.3
+      '@milkdown/ctx': 7.21.3
+      '@milkdown/exception': 7.21.3
+      '@milkdown/prose': 7.21.3
+      '@milkdown/transformer': 7.21.3
+      '@milkdown/utils': 7.21.3
       dompurify: 3.4.12
       emoji-regex: 10.6.0
       node-emoji: 2.2.0
@@ -1432,6 +1460,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@milkdown/transformer@7.21.3':
+    dependencies:
+      '@milkdown/exception': 7.21.3
+      '@milkdown/prose': 7.21.3
+      remark: 15.0.1
+      unified: 11.0.5
+    transitivePeerDependencies:
+      - supports-color
+
   '@milkdown/utils@7.21.2':
     dependencies:
       '@milkdown/core': 7.21.2
@@ -1439,6 +1476,17 @@ snapshots:
       '@milkdown/exception': 7.21.2
       '@milkdown/prose': 7.21.2
       '@milkdown/transformer': 7.21.2
+      nanoid: 5.1.16
+    transitivePeerDependencies:
+      - supports-color
+
+  '@milkdown/utils@7.21.3':
+    dependencies:
+      '@milkdown/core': 7.21.3
+      '@milkdown/ctx': 7.21.3
+      '@milkdown/exception': 7.21.3
+      '@milkdown/prose': 7.21.3
+      '@milkdown/transformer': 7.21.3
       nanoid: 5.1.16
     transitivePeerDependencies:
       - supports-color
