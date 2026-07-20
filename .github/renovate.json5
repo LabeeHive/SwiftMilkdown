@@ -3,4 +3,15 @@
   extends: [
     'github>LabeeHive/renovate-config:default.json5',
   ],
+
+  // Milkdown packages must be bumped together: they share the private-field
+  // `Ctx` type from @milkdown/ctx, so bumping only one package leaves a
+  // mismatched version of @milkdown/ctx in node_modules and breaks
+  // `pnpm run typecheck`.
+  packageRules: [
+    {
+      groupName: 'milkdown',
+      matchSourceUrls: ['https://github.com/Milkdown/milkdown'],
+    },
+  ],
 }
