@@ -24,7 +24,7 @@
   ],
   "author": "",
   "license": "MIT",
-  "packageManager": "pnpm@12.4.1",
+  "packageManager": "pnpm@12.4.2",
   "engines": {
     "node": ">=20.0.0"
   },
